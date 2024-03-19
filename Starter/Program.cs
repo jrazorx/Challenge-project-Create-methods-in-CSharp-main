@@ -34,6 +34,11 @@ while (!shouldExit)
         Console.WriteLine("Console was resized. Program exiting.");
         shouldExit = true;
     }
+    if (isFoodConsumed())
+    {
+        ChangePlayer();
+        ShowFood();
+    }
 
 }
 
@@ -124,4 +129,12 @@ void InitializeGame()
     ShowFood();
     Console.SetCursorPosition(0, 0);
     Console.Write(player);
+}
+
+bool isFoodConsumed ()
+{
+    int playerSizeXOffset = player.Length - 1;
+    int foodSizeXOffset = foods[food].Length - 1;
+
+    return playerY == foodY && ((Math.Abs(playerX - foodX) >= 0 && Math.Abs(playerX - foodX) <= playerSizeXOffset) || (Math.Abs(foodX - playerX) >= 0 && Math.Abs(foodX - playerX) <= foodSizeXOffset));
 }
