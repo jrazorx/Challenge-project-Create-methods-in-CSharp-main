@@ -28,6 +28,13 @@ InitializeGame();
 while (!shouldExit) 
 {
     Move();
+    if (TerminalResized())
+    {
+        Console.Clear();
+        Console.WriteLine("Console was resized. Program exiting.");
+        shouldExit = true;
+    }
+
 }
 
 // Returns true if the Terminal was resized 
