@@ -26,23 +26,31 @@ int food = 0;
 
 // Index of the frozen player state
 const int frozenPlayerStateIndex = 2;
+// Index of the speed player state
+const int speedPlayerStateIndex = 1;
+// Movement speed when player is in speed state
+const int speedPlayerStateMovementSpeed = 3;
 
 InitializeGame();
 while (!shouldExit) 
 {
-    Move();
     if (TerminalResized())
     {
         Console.Clear();
         Console.WriteLine("Console was resized. Program exiting.");
         shouldExit = true;
     }
+    else if (playerShouldFreeze())
+        FreezePlayer();
+    else if (isPlayerSpeedState())
+        Move(horizontalSpeed:speedPlayerStateMovementSpeed);
+    else
+        Move();
+
     if (isFoodConsumed())
     {
         ChangePlayer();
         ShowFood();
-        if (playerShouldFreeze())
-            FreezePlayer();
     }
 
 }
@@ -84,7 +92,7 @@ void FreezePlayer()
 }
 
 // Reads directional input from the Console and moves the player
-void Move(bool exitOnNonDirectionalKeyInput = false) 
+void Move(bool exitOnNonDirectionalKeyInput = false, int horizontalSpeed = 1) 
 {
     int lastX = playerX;
     int lastY = playerY;
@@ -98,10 +106,10 @@ void Move(bool exitOnNonDirectionalKeyInput = false)
             playerY++; 
             break;
 		case ConsoleKey.LeftArrow:  
-            playerX--; 
+            playerX -= horizontalSpeed; 
             break;
 		case ConsoleKey.RightArrow: 
-            playerX++; 
+            playerX += horizontalSpeed; 
             break;
 		case ConsoleKey.Escape:
             shouldExit = true; 
@@ -136,6 +144,7 @@ void InitializeGame()
     Console.Write(player);
 }
 
+// Determines whether there is a collision between player and food coordinates
 bool isFoodConsumed ()
 {
     int playerSizeXOffset = player.Length - 1;
@@ -144,7 +153,14 @@ bool isFoodConsumed ()
     return playerY == foodY && ((Math.Abs(playerX - foodX) >= 0 && Math.Abs(playerX - foodX) <= playerSizeXOffset) || (Math.Abs(foodX - playerX) >= 0 && Math.Abs(foodX - playerX) <= foodSizeXOffset));
 }
 
+// Determines if the player should freeze because he ate bad food
 bool playerShouldFreeze()
 {
     return player == states[frozenPlayerStateIndex];
+}
+
+// Determines if the player is in speed state because he ate good food
+bool isPlayerSpeedState()
+{
+    return player == states[speedPlayerStateIndex];
 }
