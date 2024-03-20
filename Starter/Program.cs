@@ -24,6 +24,9 @@ string player = states[0];
 // Index of the current food
 int food = 0;
 
+// Index of the frozen player state
+const int frozenPlayerStateIndex = 2;
+
 InitializeGame();
 while (!shouldExit) 
 {
@@ -38,6 +41,8 @@ while (!shouldExit)
     {
         ChangePlayer();
         ShowFood();
+        if (playerShouldFreeze())
+            FreezePlayer();
     }
 
 }
@@ -137,4 +142,9 @@ bool isFoodConsumed ()
     int foodSizeXOffset = foods[food].Length - 1;
 
     return playerY == foodY && ((Math.Abs(playerX - foodX) >= 0 && Math.Abs(playerX - foodX) <= playerSizeXOffset) || (Math.Abs(foodX - playerX) >= 0 && Math.Abs(foodX - playerX) <= foodSizeXOffset));
+}
+
+bool playerShouldFreeze()
+{
+    return player == states[frozenPlayerStateIndex];
 }
